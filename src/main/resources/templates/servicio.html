@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios - MLS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #4a6fa5;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .logo-container {
+            background: white;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #4a6fa5;
+            font-size: 24px;
+        }
+        
+        .system-title {
+            text-align: center;
+            color: white;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+        
+        .menu-item {
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-item.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 30px 50px;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: #b8c9e8;
+            margin: -30px -50px 30px;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-title {
+            color: white;
+            font-size: 18px;
+        }
+        
+        .user-info {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            color: #4a6fa5;
+            font-size: 28px;
+            margin-bottom: 30px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            color: #7b93b8;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #f8f9fb;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #4a6fa5;
+            background: white;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #4a6fa5;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3d5a87;
+        }
+        
+        .btn-secondary {
+            background: #e0e6ed;
+            color: #666;
+        }
+        
+        .alert {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        thead {
+            background: #f0f4f8;
+        }
+        
+        th {
+            padding: 12px;
+            text-align: left;
+            color: #4a6fa5;
+            font-weight: 600;
+            font-size: 13px;
+            border-bottom: 2px solid #e0e6ed;
+        }
+        
+        td {
+            padding: 12px;
+            color: #666;
+            font-size: 13px;
+            border-bottom: 1px solid #f0f4f8;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fb;
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .status-completado {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-proceso {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-pendiente {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo-container">MLS</div>
+        <div class="system-title">Sistema</div>
+        
+        <a th:href="@{/dashboard}" class="menu-item">
+            <span>🏠</span>
+            <span>Dashboard</span>
+        </a>
+        <a th:href="@{/perfil}" class="menu-item">
+            <span>👤</span>
+            <span>Mi Perfil</span>
+        </a>
+        <a th:href="@{/gestion-usuarios}" class="menu-item">
+            <span>👥</span>
+            <span>Gestión de Usuarios</span>
+        </a>
+        <a th:href="@{/tecnico}" class="menu-item">
+            <span>🔧</span>
+            <span>Técnicos</span>
+        </a>
+        <a th:href="@{/servicio}" class="menu-item active">
+            <span>🛠️</span>
+            <span>Servicios</span>
+        </a>
+        <a th:href="@{/cotizacion}" class="menu-item">
+            <span>📋</span>
+            <span>Cotizaciones</span>
+        </a>
+        <a th:href="@{/facturacion}" class="menu-item">
+            <span>💵</span>
+            <span>Facturación</span>
+        </a>
+        <a th:href="@{/informe}" class="menu-item">
+            <span>📊</span>
+            <span>Informes</span>
+        </a>
+        <a th:href="@{/logout}" class="menu-item">
+            <span>🚪</span>
+            <span>Cerrar Sesión</span>
+        </a>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <div class="header-title">MLS - Sistema de Mantenimiento</div>
+            <div class="user-info">
+                <span>👤</span>
+                <span>Hola, <span th:text="${nombreUsuario}"></span> <span th:text="${apellidoUsuario}"></span> (<span th:text="${perfilUsuario}"></span>)</span>
+            </div>
+        </div>
+        
+        <div class="content-card">
+            <h1 class="page-title">
+                <span>🛠️</span>
+                Registrar Servicio de Mantenimiento
+            </h1>
+            
+            <div th:if="${exito}" class="alert alert-success">
+                <span th:text="${exito}"></span>
+            </div>
+            
+            <div th:if="${error}" class="alert alert-error">
+                <span th:text="${error}"></span>
+            </div>
+            
+            <form method="POST" th:action="@{/registrar-servicio}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Servicio</label>
+                        <select name="tipoServicio" class="form-select" required>
+                            <option value="">Seleccionar tipo...</option>
+                            <option th:each="tipo : ${tiposServicio}" 
+                                    th:value="${tipo.idTipoSer}" 
+                                    th:text="${tipo.descTipoSer}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Técnico Asignado</label>
+                        <select name="tecnico" class="form-select" required>
+                            <option value="">Seleccionar técnico...</option>
+                            <option th:each="tec : ${tecnicos}" 
+                                    th:value="${tec.idTec}" 
+                                    th:text="${tec.nomTec + ' ' + tec.apeTec}"></option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Precio</label>
+                        <input type="number" name="precio" class="form-input" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" name="fecha" class="form-input" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+    <label class="form-label">Descripción del Servicio</label>
+    <textarea name="descripcion" class="form-input" rows="4" placeholder="Describe los detalles del servicio a realizar..." style="resize: vertical; font-family: inherit;"></textarea>
+</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select name="estado" class="form-select" required>
+                        <option value="">Seleccionar estado...</option>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="En Proceso">En Proceso</option>
+                        <option value="Completado">Completado</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Registrar Servicio</button>
+                    <button type="reset" class="btn btn-secondary">Limpiar</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="content-card">
+    <h2 class="page-title" style="font-size: 20px;">Lista de Servicios</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tipo de Servicio</th>
+                <th>Técnico</th>
+                <th>Descripción</th> 
+                <th>Precio</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="serv : ${servicios}">
+                <td th:text="${serv.idSer}"></td>
+                <td th:text="${serv.tipoServicio != null ? serv.tipoServicio.descTipoSer : 'N/A'}"></td>
+                <td th:text="${serv.tecnico != null ? serv.tecnico.nomTec + ' ' + serv.tecnico.apeTec : 'N/A'}"></td>
+                <td th:text="${serv.descripcionSer != null ? serv.descripcionSer : 'Sin descripción'}"></td>  <!-- ← DESCRIPCIÓN AQUÍ -->
+                <td th:text="'$ ' + ${#numbers.formatDecimal(serv.precioSer, 0, 'COMMA', 0, 'POINT')}"></td>
+                <td th:text="${serv.fechaSer}"></td>
+                <td>
+                    <span th:class="${'status-badge status-' + (serv.estadoSer == 'Completado' ? 'completado' : (serv.estadoSer == 'En Proceso' ? 'proceso' : 'pendiente'))}" 
+                          th:text="${serv.estadoSer}"></span>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(servicios)}">
+                <td colspan="7" style="text-align: center; padding: 20px;">No hay servicios registrados</td>  <!-- ← CAMBIADO A colspan="7" -->
+            </tr>
+        </tbody>
+    </table>
+</div>

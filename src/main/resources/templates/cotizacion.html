@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizaciones - MLS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #4a6fa5;
+            padding: 20px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .logo-container {
+            background: white;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #4a6fa5;
+            font-size: 24px;
+        }
+        
+        .system-title {
+            text-align: center;
+            color: white;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+        
+        .menu-item {
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .menu-item.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 30px 50px;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: #b8c9e8;
+            margin: -30px -50px 30px;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-title {
+            color: white;
+            font-size: 18px;
+        }
+        
+        .user-info {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            color: #4a6fa5;
+            font-size: 28px;
+            margin-bottom: 30px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            color: #7b93b8;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e6ed;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #f8f9fb;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #4a6fa5;
+            background: white;
+        }
+        
+        .services-selector {
+            background: #f8f9fb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .service-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 80px;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .btn-add {
+            background: #4a6fa5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .btn-add:hover {
+            background: #3d5a87;
+        }
+        
+        .btn-remove {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .btn-remove:hover {
+            background: #c82333;
+        }
+        
+        .total-display {
+            background: #f0f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        .total-label {
+            color: #7b93b8;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .total-amount {
+            color: #4a6fa5;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #4a6fa5;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3d5a87;
+        }
+        
+        .btn-secondary {
+            background: #e0e6ed;
+            color: #666;
+        }
+        
+        .alert {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        thead {
+            background: #f0f4f8;
+        }
+        
+        th {
+            padding: 12px;
+            text-align: left;
+            color: #4a6fa5;
+            font-weight: 600;
+            font-size: 13px;
+            border-bottom: 2px solid #e0e6ed;
+        }
+        
+        td {
+            padding: 12px;
+            color: #666;
+            font-size: 13px;
+            border-bottom: 1px solid #f0f4f8;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fb;
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .status-aprobada {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pendiente {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-rechazada {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo-container">MLS</div>
+        <div class="system-title">Sistema</div>
+        
+        <a th:href="@{/dashboard}" class="menu-item">
+            <span>🏠</span>
+            <span>Dashboard</span>
+        </a>
+        <a th:href="@{/perfil}" class="menu-item">
+            <span>👤</span>
+            <span>Mi Perfil</span>
+        </a>
+        <a th:href="@{/gestion-usuarios}" class="menu-item">
+            <span>👥</span>
+            <span>Gestión de Usuarios</span>
+        </a>
+        <a th:href="@{/tecnico}" class="menu-item">
+            <span>🔧</span>
+            <span>Técnicos</span>
+        </a>
+        <a th:href="@{/servicio}" class="menu-item">
+            <span>🛠️</span>
+            <span>Servicios</span>
+        </a>
+        <a th:href="@{/cotizacion}" class="menu-item active">
+            <span>📋</span>
+            <span>Cotizaciones</span>
+        </a>
+        <a th:href="@{/facturacion}" class="menu-item">
+            <span>💵</span>
+            <span>Facturación</span>
+        </a>
+        <a th:href="@{/informe}" class="menu-item">
+            <span>📊</span>
+            <span>Informes</span>
+        </a>
+        <a th:href="@{/logout}" class="menu-item">
+            <span>🚪</span>
+            <span>Cerrar Sesión</span>
+        </a>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <div class="header-title">MLS - Sistema de Mantenimiento</div>
+            <div class="user-info">
+                <span>👤</span>
+                <span>Hola, <span th:text="${nombreUsuario}"></span> <span th:text="${apellidoUsuario}"></span> (<span th:text="${perfilUsuario}"></span>)</span>
+            </div>
+        </div>
+        
+        <div class="content-card">
+            <h1 class="page-title">
+                <span>📄</span>
+                Crear Cotización
+            </h1>
+            
+            <div th:if="${exito}" class="alert alert-success">
+                <span th:text="${exito}"></span>
+            </div>
+            
+            <div th:if="${error}" class="alert alert-error">
+                <span th:text="${error}"></span>
+            </div>
+            
+            <form method="POST" th:action="@{/crear-cotizacion}" id="cotizacionForm">
+                <div class="form-group">
+                    <label class="form-label">Cliente</label>
+                    <select name="cliente" class="form-select" required>
+                        <option value="">Seleccione un cliente</option>
+                        <option th:each="cli : ${clientes}" 
+                                th:value="${cli.idCliente}" 
+                                th:text="${cli.nomCli + ' ' + cli.apeCli}"></option>
+                    </select>
+                </div>
+                
+                <div class="services-selector">
+                    <label class="form-label">Servicios</label>
+                    <div id="servicesContainer">
+                        <div class="service-item">
+                            <select class="form-select service-select" onchange="calcularTotal()">
+                                <option value="">Seleccione un servicio...</option>
+                                <option th:each="serv : ${servicios}" 
+                                        th:value="${serv.idSer}"
+                                        th:data-precio="${serv.precioSer}"
+                                        th:text="${serv.tipoServicio.descTipoSer} + ' - $ ' + ${#numbers.formatDecimal(serv.precioSer, 0, 'POINT', 0, 'COMMA')}"></option>
+                            </select>
+                            <input type="number" class="form-input cantidad-input" placeholder="Cantidad" min="1" value="1" onchange="calcularTotal()">
+                            <button type="button" class="btn-remove" onclick="removerServicio(this)" style="display: none;">Quitar</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-add" onclick="agregarServicio()">+ Agregar Servicio</button>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select name="estado" class="form-select" required>
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Aprobada">Aprobada</option>
+                        <option value="Rechazada">Rechazada</option>
+                    </select>
+                </div>
+                
+                <div class="total-display">
+                    <div class="total-label">Total</div>
+                    <div class="total-amount" id="totalDisplay">$0.00</div>
+                    <input type="hidden" name="total" id="totalInput" value="0">
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Guardar Cotización</button>
+                    <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="content-card">
+            <h2 class="page-title" style="font-size: 20px;">Lista de Cotizaciones</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="cot : ${cotizaciones}">
+                        <td th:text="${cot.idCot}"></td>
+                        <td th:text="${cot.cliente != null ? cot.cliente.nomCli + ' ' + cot.cliente.apeCli : 'N/A'}"></td>
+                        <td th:text="'$ ' + ${#numbers.formatDecimal(cot.totalCot, 1, 'POINT', 0, 'NONE')}"></td>
+                        <td>
+                            <span th:class="${'status-badge status-' + (cot.estadoCot == 'Aprobada' ? 'aprobada' : (cot.estadoCot == 'Pendiente' ? 'pendiente' : 'rechazada'))}" 
+                                  th:text="${cot.estadoCot}"></span>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(cotizaciones)}">
+                        <td colspan="4" style="text-align: center; padding: 20px;">No hay cotizaciones registradas</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        function agregarServicio() {
+            const container = document.getElementById('servicesContainer');
+            const firstItem = container.querySelector('.service-item');
+            const newItem = firstItem.cloneNode(true);
+            
+            newItem.querySelector('.service-select').value = '';
+            newItem.querySelector('.cantidad-input').value = '1';
+            newItem.querySelector('.btn-remove').style.display = 'inline-block';
+            
+            container.appendChild(newItem);
+            calcularTotal();
+        }
+        
+        function removerServicio(button) {
+            button.closest('.service-item').remove();
+            calcularTotal();
+        }
+        
+        function calcularTotal() {
+            let total = 0;
+            const items = document.querySelectorAll('.service-item');
+            
+            items.forEach(item => {
+                const select = item.querySelector('.service-select');
+                const cantidad = parseFloat(item.querySelector('.cantidad-input').value) || 0;
+                
+                if (select.value) {
+                    const precio = parseFloat(select.options[select.selectedIndex].getAttribute('data-precio')) || 0;
+                    total += precio * cantidad;
+                }
+            });
+            
+            document.getElementById('totalDisplay').textContent = '$ ' + total.toLocaleString('es-CO');
+
+            document.getElementById('totalInput').value = total;
+                    }
+        
+        function limpiarFormulario() {
+            document.getElementById('cotizacionForm').reset();
+            const container = document.getElementById('servicesContainer');
+            const items = container.querySelectorAll('.service-item');
+            
+        
+            for(let i = 1; i < items.length; i++) {
+                items[i].remove();
+            }
+            
+            calcularTotal();
+        }
+    </script>
+</body>
+</html>

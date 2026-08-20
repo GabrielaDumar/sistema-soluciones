@@ -1,0 +1,103 @@
+{
+  "info": {
+    "name": "Mantenimiento - POST y GET",
+    "_postman_id": "mantenimiento-post-get",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "USUARIO - Agregar (POST)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nomUsu\": \"Andres\",\n  \"apeUsu\": \"Peña\",\n  \"correoUsu\": \"andres.prueba@example.com\",\n  \"contUsu\": \"123456\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/usuarios",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "usuarios"
+          ]
+        }
+      }
+    },
+    {
+      "name": "USUARIO - Mostrar (GET)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/usuarios",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "usuarios"
+          ]
+        }
+      }
+    },
+    {
+      "name": "CLIENTE - Agregar (POST)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nomCli\": \"Cliente\",\n  \"apeCli\": \"Prueba\",\n  \"telCli\": \"3001234567\",\n  \"correoCli\": \"cliente.prueba@example.com\",\n  \"dirCli\": \"Monteria\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/clientes",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "clientes"
+          ]
+        }
+      }
+    },
+    {
+      "name": "CLIENTE - Mostrar (GET)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/clientes",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "clientes"
+          ]
+        }
+      }
+    }
+  ]
+}

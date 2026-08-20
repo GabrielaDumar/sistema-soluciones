@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MLS Sistema de Mantenimiento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #c3cfe2 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            padding: 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+        }
+        
+        .logo-text {
+            color: #4a6fa5;
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            display: block;
+            color: #4a6fa5;
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #4a6fa5;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: #4a6fa5;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .btn-login:hover {
+            background: #3d5a87;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-container">
+
+             <div class="logo">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTX7B_9WAFJBHWTBcCxdlbeAGXANyz8eMDQA&s" alt="Logo MLS">
+            </div>
+            <div class="logo-text">MLS</div>
+        </div>
+        
+        <div th:if="${error}" class="error-message">
+            <span th:text="${error}"></span>
+        </div>
+        
+        <form method="POST" th:action="@{/login}">
+            <div class="form-group">
+                <label class="form-label">Correo Electrónico</label>
+                <input type="email" name="correo" class="form-input" placeholder="ejemplo@correo.com" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Contraseña</label>
+                <input type="password" name="password" class="form-input" placeholder="••••••••" required>
+            </div>
+            
+            <button type="submit" class="btn-login">Iniciar Sesión</button>
+            <div style="text-align:center; margin-top:15px;">
+    <span style="color:#666;">¿No tienes cuenta?</span>
+    <a th:href="@{/registro}" style="color:#4a6fa5; font-weight:bold; text-decoration:none;">
+        Regístrate aquí
+    </a>
+</div>
+
+        </form>
+    </div>
+</body>
+</html>

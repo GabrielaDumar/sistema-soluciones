@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MLS Sistema de Mantenimiento</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #4a6fa5;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo-container {
+            background: white;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #4a6fa5;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .system-title {
+            text-align: center;
+            color: white;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+        
+        .menu-item {
+            padding: 15px 30px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 35px;
+        }
+        
+        .menu-item.active {
+            background: rgba(255, 255, 255, 0.2);
+            border-left: 4px solid white;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 30px 50px;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: -30px -50px 40px;
+            padding: 25px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .header-title {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .user-info {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+        }
+        
+        .welcome-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        .welcome-title {
+            color: #4a6fa5;
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .welcome-text {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .stat-icon {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4a6fa5;
+        }
+        
+        .charts-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    height: 350px; 
+}
+        
+        .chart-title {
+            color: #4a6fa5;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .quick-actions {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .action-btn-icon {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo-container">MLS</div>
+        <div class="system-title">Sistema</div>
+        
+        <a th:href="@{/dashboard}" class="menu-item active">
+            <span>🏠</span>
+            <span>Dashboard</span>
+        </a>
+        <a th:href="@{/perfil}" class="menu-item">
+            <span>👤</span>
+            <span>Mi Perfil</span>
+        </a>
+        <a th:href="@{/gestion-usuarios}" class="menu-item">
+            <span>👥</span>
+            <span>Gestión de Usuarios</span>
+        </a>
+        <a th:href="@{/tecnico}" class="menu-item">
+            <span>🔧</span>
+            <span>Técnicos</span>
+        </a>
+        <a th:href="@{/servicio}" class="menu-item">
+            <span>🛠️</span>
+            <span>Servicios</span>
+        </a>
+        <a th:href="@{/cotizacion}" class="menu-item">
+            <span>📋</span>
+            <span>Cotizaciones</span>
+        </a>
+        <a th:href="@{/facturacion}" class="menu-item">
+            <span>💵</span>
+            <span>Facturación</span>
+        </a>
+        <a th:href="@{/informe}" class="menu-item">
+            <span>📊</span>
+            <span>Informes</span>
+        </a>
+        <a th:href="@{/logout}" class="menu-item">
+            <span>🚪</span>
+            <span>Cerrar Sesión</span>
+        </a>
+    </div>
+    
+    <div class="main-content">
+        <div class="header">
+            <div class="header-title">📊 Panel de Control MLS</div>
+            <div class="user-info">
+                <span>👤</span>
+                <span><strong th:text="${nombreUsuario}"></strong> <span th:text="${apellidoUsuario}"></span> (<span th:text="${perfilUsuario}"></span>)</span>
+</div>
+        </div>
+        
+        <div class="welcome-card">
+            <h1 class="welcome-title">👋 Bienvenido, <span th:text="${nombreUsuario}"></span>!</h1>
+            <p class="welcome-text">Este es tu panel de control del Sistema de Mantenimiento MLS. Aquí puedes ver un resumen de las actividades y acceder rápidamente a las funciones principales del sistema.</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🔧</div>
+                <div class="stat-label">Total Servicios</div>
+                <div class="stat-value">156</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-label">Servicios Activos</div>
+                <div class="stat-value">7</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-label">Facturado</div>
+                <div class="stat-value">$18.5K</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👷</div>
+                <div class="stat-label">Técnicos</div>
+                <div class="stat-value">12</div>
+            </div>
+        </div>
+        
+        <div class="charts-container">
+            <div class="chart-card">
+                <h3 class="chart-title">📈 Servicios por Mes</h3>
+                <canvas id="servicesChart"></canvas>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">📊 Estado de Servicios</h3>
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="quick-actions">
+            <h3 class="chart-title">⚡ Accesos Rápidos</h3>
+            <div class="action-grid">
+                <a th:href="@{/servicio}" class="action-btn">
+                    <span class="action-btn-icon">🛠️</span>
+                    Nuevo Servicio
+                </a>
+                <a th:href="@{/tecnico}" class="action-btn">
+                    <span class="action-btn-icon">👷</span>
+                    Registrar Técnico
+                </a>
+                <a th:href="@{/cotizacion}" class="action-btn">
+                    <span class="action-btn-icon">📋</span>
+                    Nueva Cotización
+                </a>
+                <a th:href="@{/facturacion}" class="action-btn">
+                    <span class="action-btn-icon">💵</span>
+                    Generar Factura
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Gráfico de Servicios por Mes
+        const ctxServices = document.getElementById('servicesChart').getContext('2d');
+        new Chart(ctxServices, {
+            type: 'line',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Servicios',
+                    data: [12, 19, 15, 25, 22, 30],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+        
+        // Gráfico de Estado de Servicios
+        const ctxStatus = document.getElementById('statusChart').getContext('2d');
+        new Chart(ctxStatus, {
+            type: 'doughnut',
+            data: {
+                labels: ['Completado', 'En Proceso', 'Pendiente'],
+                datasets: [{
+                    data: [132, 18, 6],
+                    backgroundColor: ['#4caf50', '#ff9800', '#f44336']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+</body>
+</html>
