@@ -5,17 +5,26 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import co.edu.uniremington.gabrieladumar.Mantenimiento.model.Perfil;
+import co.edu.uniremington.gabrieladumar.Mantenimiento.model.EspecialidadTecnico;
+import co.edu.uniremington.gabrieladumar.Mantenimiento.repository.EspecialidadTecnicoRepository;
 import co.edu.uniremington.gabrieladumar.Mantenimiento.repository.PerfilRepository;
 
 @Configuration
 public class DataInitializer {
 
     @Bean
-    CommandLineRunner initializeProfiles(PerfilRepository perfilRepository) {
+    CommandLineRunner initializeProfiles(
+            PerfilRepository perfilRepository,
+            EspecialidadTecnicoRepository especialidadRepository) {
         return args -> {
             createProfileIfMissing(perfilRepository, "Cliente", "Usuario cliente");
             createProfileIfMissing(perfilRepository, "Administrador", "Administrador del sistema");
             createProfileIfMissing(perfilRepository, "Tecnico", "Tecnico de servicios");
+            createSpecialtyIfMissing(especialidadRepository, "Electricidad");
+            createSpecialtyIfMissing(especialidadRepository, "Plomería");
+            createSpecialtyIfMissing(especialidadRepository, "Pintura");
+            createSpecialtyIfMissing(especialidadRepository, "Carpintería");
+            createSpecialtyIfMissing(especialidadRepository, "Sistemas");
         };
     }
 
@@ -35,41 +44,19 @@ public class DataInitializer {
         perfil.setDescripcion(description);
         perfilRepository.save(perfil);
     }
-}package co.edu.uniremington.gabrieladumar.Mantenimiento.config;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+    private void createSpecialtyIfMissing(
+            EspecialidadTecnicoRepository especialidadRepository,
+            String name) {
+        boolean specialtyExists = especialidadRepository.findAll().stream()
+                .anyMatch(especialidad -> name.equals(especialidad.getDescEspTec()));
 
-import co.edu.uniremington.gabrieladumar.Mantenimiento.model.Perfil;
-import co.edu.uniremington.gabrieladumar.Mantenimiento.repository.PerfilRepository;
-
-@Configuration
-public class DataInitializer {
-
-    @Bean
-    CommandLineRunner initializeProfiles(PerfilRepository perfilRepository) {
-        return args -> {
-            createProfileIfMissing(perfilRepository, "Cliente", "Usuario cliente");
-            createProfileIfMissing(perfilRepository, "Administrador", "Administrador del sistema");
-            createProfileIfMissing(perfilRepository, "Tecnico", "Tecnico de servicios");
-        };
-    }
-
-    private void createProfileIfMissing(
-            PerfilRepository perfilRepository,
-            String name,
-            String description) {
-        boolean profileExists = perfilRepository.findAll().stream()
-                .anyMatch(perfil -> name.equals(perfil.getNombrePerfil()));
-
-        if (profileExists) {
+        if (specialtyExists) {
             return;
         }
 
-        Perfil perfil = new Perfil();
-        perfil.setNombrePerfil(name);
-        perfil.setDescripcion(description);
-        perfilRepository.save(perfil);
+        EspecialidadTecnico especialidad = new EspecialidadTecnico();
+        especialidad.setDescEspTec(name);
+        especialidadRepository.save(especialidad);
     }
 }
