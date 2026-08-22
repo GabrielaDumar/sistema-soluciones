@@ -68,7 +68,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
 
       final response = await http.post(
         Uri.parse(
-          "http://10.0.2.2:8080/api/usuarios",
+          "http://10.0.2.2:8080/api/clientes",
         ),
 
         headers: {
@@ -77,18 +77,13 @@ class _RegistroScreenState extends State<RegistroScreen> {
 
         body: jsonEncode({
 
-          "nomUsu": nombre,
+          "nomCli": nombre,
 
-          "apeUsu": apellido,
+          "apeCli": apellido,
 
-          "correoUsu": correo,
+          "correoCli": correo,
 
-          "contUsu": password,
-
-          // Perfil Cliente
-          "perfil": {
-            "idPerfil": 1
-          }
+          "password": password,
         }),
       );
 
