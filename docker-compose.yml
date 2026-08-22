@@ -1,0 +1,60 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.compose
+      target: frontend-runtime
+      args:
+        API_BASE_URL: /api
+    image: proyecto-app:latest
+    container_name: proyecto-app
+    depends_on:
+      backend:
+        condition: service_started
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 10000
+      BACKEND_HOST: backend
+    ports:
+      - "${APP_PORT:-10000}:10000"
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./mantenimiento
+      dockerfile: Dockerfile
+    image: proyecto-backend:latest
+    container_name: proyecto-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/sistema_servicios?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_APP_USER:-mantenimiento_app}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_APP_PASSWORD:?Define MYSQL_APP_PASSWORD en .env}
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.4
+    container_name: proyecto-db
+    environment:
+      MYSQL_DATABASE: sistema_servicios
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Define MYSQL_ROOT_PASSWORD en .env}
+      MYSQL_USER: ${MYSQL_APP_USER:-mantenimiento_app}
+      MYSQL_PASSWORD: ${MYSQL_APP_PASSWORD:?Define MYSQL_APP_PASSWORD en .env}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u$${MYSQL_USER} -p$${MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
