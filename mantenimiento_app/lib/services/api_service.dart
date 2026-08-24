@@ -5,10 +5,26 @@ import 'package:http/http.dart' as http;
 import '../models/tecnico.dart';
 import '../models/tipo_servicio.dart';
 import '../models/servicio.dart';
+import '../models/usuario.dart';
 
 class ApiService {
   static const String baseUrl =
       "http://10.0.2.2:8080/api";
+
+  Future<List<Usuario>> obtenerUsuarios() async {
+    final response = await http.get(
+      Uri.parse("$baseUrl/usuarios"),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data
+          .map((json) => Usuario.fromJson(json))
+          .toList();
+    }
+
+    throw Exception("Error al cargar usuarios");
+  }
 
   // =========================================================
   // TÉCNICOS

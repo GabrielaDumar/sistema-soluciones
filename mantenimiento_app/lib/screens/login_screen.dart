@@ -7,6 +7,7 @@ import '../models/usuario.dart';
 
 import 'home_cliente.dart';
 import 'home_tecnico.dart';
+import 'admin.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -120,6 +121,20 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           );
 
+        }
+
+        // ==========================================
+        // ADMINISTRADOR
+        // ==========================================
+
+        else if (perfil == "Administrador") {
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AdminScreen(),
+            ),
+          );
         }
 
         // ==========================================
