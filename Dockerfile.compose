@@ -27,6 +27,9 @@ RUN flutter pub get
 
 COPY mantenimiento_app .
 
+RUN rm -rf .dart_tool build \
+    && flutter pub get
+
 ARG API_BASE_URL=/api
 RUN sed -i "s#http://10\\.0\\.2\\.2:8080/api#${API_BASE_URL}#g" \
     lib/services/api_service.dart \

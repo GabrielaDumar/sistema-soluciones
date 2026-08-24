@@ -1,0 +1,19 @@
+.git
+.env
+.env.*
+!.env.example
+
+# Artefactos generados
+mantenimiento_app/.dart_tool
+mantenimiento_app/build
+mantenimiento_app/.pub-cache
+mantenimiento_app/.gradle
+target
+
+# IDE y archivos temporales
+.vscode
+.idea
+*.iml
+*.log
+Thumbs.db
+Desktop.ini
