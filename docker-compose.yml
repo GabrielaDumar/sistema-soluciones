@@ -22,7 +22,7 @@ services:
 
   backend:
     build:
-      context: ./mantenimiento
+      context: .
       dockerfile: Dockerfile
     image: proyecto-backend:latest
     container_name: proyecto-backend
